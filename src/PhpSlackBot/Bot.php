@@ -106,7 +106,8 @@ class Bot {
             $socket = new \React\Socket\Server($loop);
             $http = new \React\Http\Server($socket);
             $http->on('request', function ($request, $response) use ($client) {
-                $post = $request->getPost();
+              $request->on('data', function($data) use ($client, $request, $response) {
+                parse_str($data, $post);
                 if ($this->authentificationToken === null || ($this->authentificationToken !== null &&
                                                               isset($post['auth']) &&
                                                               $post['auth'] === $this->authentificationToken)) {
@@ -127,6 +128,7 @@ class Bot {
                     $response->writeHead(403, array('Content-Type' => 'text/plain'));
                     $response->end("");
                 }
+              });
             });
             $socket->listen($this->webserverPort);
         }
