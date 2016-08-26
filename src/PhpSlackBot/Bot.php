@@ -108,6 +108,7 @@ class Bot {
             $http->on('request', function ($request, $response) use ($client) {
               $request->on('data', function($data) use ($client, $request, $response) {
                 parse_str($data, $post);
+                $request->close();
                 if ($this->authentificationToken === null || ($this->authentificationToken !== null &&
                                                               isset($post['auth']) &&
                                                               $post['auth'] === $this->authentificationToken)) {
